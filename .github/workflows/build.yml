@@ -1,0 +1,31 @@
+
+name: Build THARA APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Extract project
+        run: unzip THARA_Android_Project.zip
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build APK
+        run: gradle -p THARA assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: THARA-debug-APK
+          path: THARA/app/build/outputs/apk/debug/*.apk
